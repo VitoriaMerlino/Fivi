@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/Layout';
+import { ListaProjetos } from './pages/ListaProjetos';
 
 export function App() {
   return (
@@ -14,7 +15,7 @@ export function App() {
           <Route path="tarefas/:id" element={<h2>Detalhes da Tarefa</h2>} />
           
           {/* Rotas de Projetos */}
-          <Route path="projetos" element={<h2>Lista de Projetos</h2>} />
+          <Route path="projetos" element={<ListaProjetos />} />
           <Route path="projetos/:id" element={<h2>Página do Projeto</h2>} />
 
           {/* Rota 404 - Página Não Encontrada */}
