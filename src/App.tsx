@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/Layout';
+import { ListaTarefas } from './pages/ListaTarefas';
+import { DetalheTarefa } from './pages/DetalheTarefas';
 
 export function App() {
   return (
@@ -10,8 +12,8 @@ export function App() {
           <Route index element={<Navigate to="/tarefas" replace />} />
           
           {/* Rotas de Tarefas */}
-          <Route path="tarefas" element={<h2>Lista de Tarefas</h2>} />
-          <Route path="tarefas/:id" element={<h2>Detalhes da Tarefa</h2>} />
+          <Route path="tarefas" element={<ListaTarefas />} />
+          <Route path="tarefas/:id" element={<DetalheTarefa />} />
           
           {/* Rotas de Projetos */}
           <Route path="projetos" element={<h2>Lista de Projetos</h2>} />
