@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProjetoComTarefas } from '../api';
 import type { ProjetoComTarefas } from '../api';
+import { TarefaCard } from '../components/TarefaCard';
+
 
 export function PaginaProjeto() {
   const { id } = useParams();
@@ -25,8 +27,7 @@ export function PaginaProjeto() {
       <ul>
         {projeto.tarefas.map((tarefa) => (
           <li key={tarefa.id}>
-            {/* PROVISÓRIO: trocar por <CartaoTarefa tarefa={tarefa} /> quando a #4 for unida */}
-            {tarefa.titulo} - {tarefa.status} - {tarefa.prioridade} - {tarefa.responsavel} - {tarefa.prazo}
+            <TarefaCard tarefa={tarefa} />
           </li>
         ))}
       </ul>
