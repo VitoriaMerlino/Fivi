@@ -1,34 +1,53 @@
 import { Link } from 'react-router-dom';
 import type { Tarefa } from '../tipos';
 
-interface Props {
-    tarefa: Tarefa;
+interface TarefaCardProps {
+  tarefa: Tarefa;
 }
 
-export function TarefaCard({ tarefa }: Props) {
-    return (
-        <div style={{
-            border: '1px solid #e2e8e0',
-            borderRadius: '8px',
-            padding: '16px',
-            marginBottom: '12px',
-            backgroundColor: '#ffffff',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-        }}>
-            <h3 style={{ marginTop: 0, marginBottom: '8px' }}>{tarefa.titulo}</h3>
-            <p style={{ margin: '4px 0' }}><strong>Status:</strong> {tarefa.status}</p>
-            <p style={{ margin: '4px 0' }}><strong>Prioridade:</strong> {tarefa.prioridade}</p>
-            <p style={{ margin: '4px 0' }}><strong>Responsável:</strong> {tarefa.responsavel}</p>
-            <p style={{ margin: '4px 0' }}><strong>Prazo:</strong> {tarefa.prazo}</p>
+export function TarefaCard({ tarefa }: TarefaCardProps) {
+  return (
+    <div style={{
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      backdropFilter: 'blur(12px)',
+      borderRadius: '20px',
+      padding: '24px',
+      border: '1px solid rgba(255, 255, 255, 0.3)',
+      boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.2)',
+      color: '#ffffff',
+      display: 'flex',
+      flexDirection: 'column',
+      justify: 'space-between',
+      gap: '12px'
+    }}>
+      <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 'bold' }}>
+        {tarefa.titulo}
+      </h3>
 
-            <div style={{ marginTop: '12px' }}>
-                <Link
-                    to={`/tarefas/${tarefa.id}`}
-                    style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 'bold' }}
-                >
-                    Ver detalhes →
-                </Link>
-            </div>
-        </div>
-    );
+      <div style={{ fontSize: '0.95rem', opacity: 0.9, lineHeight: '1.5' }}>
+        <p style={{ margin: '4px 0' }}><strong>Status:</strong> {tarefa.status}</p>
+        <p style={{ margin: '4px 0' }}><strong>Prioridade:</strong> {tarefa.prioridade}</p>
+        <p style={{ margin: '4px 0' }}><strong>Responsável:</strong> {tarefa.responsavel}</p>
+        <p style={{ margin: '4px 0' }}><strong>Prazo:</strong> {tarefa.prazo}</p>
+      </div>
+
+      <Link 
+        to={`/tarefas/${tarefa.id}`} 
+        style={{
+          display: 'inline-block',
+          marginTop: '8px',
+          padding: '10px 20px',
+          backgroundColor: '#ffffff',
+          color: '#c026d3',
+          fontWeight: 'bold',
+          borderRadius: '30px',
+          textDecoration: 'none',
+          textAlign: 'center',
+          boxShadow: '0 4px 14px rgba(0,0,0,0.15)'
+        }}
+      >
+        Ver detalhes →
+      </Link>
+    </div>
+  );
 }

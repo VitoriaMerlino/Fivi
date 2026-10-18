@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getProjetoComTarefas } from '../api';
 import type { ProjetoComTarefas } from '../api';
 import { TarefaCard } from '../components/TarefaCard';
-
 
 export function PaginaProjeto() {
   const { id } = useParams();
@@ -14,23 +13,70 @@ export function PaginaProjeto() {
     getProjetoComTarefas(id).then(setProjeto);
   }, [id]);
 
-  if (!projeto) return <p>Carregando...</p>;
+  if (!projeto) {
+    return <p style={{ color: '#ffffff', fontSize: '1.2rem' }}>Carregando...</p>;
+  }
 
   return (
-    <section>
-      <h2>{projeto.nome}</h2>
-      <p>{projeto.descricao}</p>
-      <p>Disciplina: {projeto.disciplina}</p>
-      <p>Criado em: {projeto.criadoEm}</p>
+    <section style={{ maxWidth: '1000px', margin: '0 auto', color: '#ffffff' }}>
+      {/* Botão de voltar estilo pílula */}
+      <Link
+        to="/projetos"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '10px 22px',
+          backgroundColor: 'rgba(255, 255, 255, 0.2)',
+          backdropFilter: 'blur(10px)',
+          color: '#ffffff',
+          fontWeight: 'bold',
+          borderRadius: '30px',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          textDecoration: 'none',
+          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
+          marginBottom: '24px'
+        }}
+      >
+        ← Voltar para projetos
+      </Link>
 
-      <h3>Tarefas</h3>
-      <ul>
+      {/* Detalhes do Projeto */}
+      <div style={{ marginBottom: '28px' }}>
+        <h2 style={{ fontSize: '2.2rem', fontWeight: 'bold', margin: '0 0 12px 0', color: '#ffffff' }}>
+          {projeto.nome}
+        </h2>
+        {projeto.descricao && (
+          <p style={{ fontSize: '1.1rem', opacity: 0.9, margin: '6px 0' }}>
+            {projeto.descricao}
+          </p>
+        )}
+        {projeto.disciplina && (
+          <p style={{ fontSize: '0.95rem', opacity: 0.85, margin: '4px 0' }}>
+            <strong>Disciplina:</strong> {projeto.disciplina}
+          </p>
+        )}
+        {projeto.criadoEm && (
+          <p style={{ fontSize: '0.95rem', opacity: 0.85, margin: '4px 0' }}>
+            <strong>Criado em:</strong> {projeto.criadoEm}
+          </p>
+        )}
+      </div>
+
+      <h3 style={{ fontSize: '1.5rem', marginBottom: '18px', color: '#ffffff', fontWeight: 'bold' }}>
+        Tarefas
+      </h3>
+
+      {/* Container flexível sem <ul>/<li> para eliminar as bolinhas e descolar as caixas */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px'
+      }}>
         {projeto.tarefas.map((tarefa) => (
-          <li key={tarefa.id}>
-            <TarefaCard tarefa={tarefa} />
-          </li>
+          <TarefaCard key={tarefa.id} tarefa={tarefa} />
         ))}
-      </ul>
+      </div>
     </section>
   );
 }
