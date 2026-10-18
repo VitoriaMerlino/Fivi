@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Projeto } from "../tipos";
-import { getProjetos } from "../api"; // Certifica-te de ter esta função na tua API
+import { getProjetos } from "../api";
 
 export function ListaProjetos() {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
@@ -30,7 +30,6 @@ export function ListaProjetos() {
         Projetos
       </h1>
 
-      {/* Lista de Cartões de Projetos em Grid/Flex */}
       <div style={{
         display: "flex",
         flexDirection: "column",
@@ -53,7 +52,7 @@ export function ListaProjetos() {
           >
             <div>
               <h2 style={{ margin: 0, fontSize: "1.4rem", fontWeight: "bold", color: "#ffffff" }}>
-                {projeto.nome || projeto.titulo}
+                {projeto.nome}
               </h2>
               {projeto.descricao && (
                 <p style={{ marginTop: "8px", opacity: 0.9, fontSize: "0.95rem" }}>
@@ -62,7 +61,6 @@ export function ListaProjetos() {
               )}
             </div>
 
-            {/* Botão Ver Projeto */}
             <Link
               to={`/projetos/${projeto.id}`}
               style={{

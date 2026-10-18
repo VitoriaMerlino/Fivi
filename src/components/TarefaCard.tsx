@@ -17,7 +17,7 @@ export function TarefaCard({ tarefa }: TarefaCardProps) {
       color: '#ffffff',
       display: 'flex',
       flexDirection: 'column',
-      justify: 'space-between',
+      justifyContent: 'space-between', /* Corrigido de 'justify' para 'justifyContent' */
       gap: '12px'
     }}>
       <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 'bold' }}>
