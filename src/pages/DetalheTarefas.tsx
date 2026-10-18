@@ -24,26 +24,54 @@ export function DetalheTarefa() {
     }, [id]);
 
     if (carregando) {
-        return <p>Carregando detalhes...</p>;
+        return <p style={{ color: '#ffffff', fontSize: '1.2rem' }}>Carregando detalhes...</p>;
     }
 
     if (!tarefa) {
-        return <p>Tarefa não encontrada...</p>;
+        return <p style={{ color: '#ffffff', fontSize: '1.2rem' }}>Tarefa não encontrada...</p>;
     }
 
     return (
-        <div style={{ padding: '16px', maxWidth: '600px' }}>
-            <Link to="/tarefas" style={{ color: '#2563eb', textDecoration: 'none' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', color: '#ffffff' }}>
+            {/* Botão de voltar estilo pill translúcido */}
+            <Link 
+                to="/tarefas" 
+                style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 22px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    backdropFilter: 'blur(10px)',
+                    color: '#ffffff',
+                    fontWeight: 'bold',
+                    borderRadius: '30px',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    textDecoration: 'none',
+                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)'
+                }}
+            >
                 ← Voltar para a lista
             </Link>
 
-            <h1 style={{ marginTop: '16px' }}>{tarefa.titulo}</h1>
+            {/* Título da Tarefa */}
+            <h1 style={{ marginTop: '24px', marginBottom: '20px', fontSize: '2.2rem', color: '#ffffff' }}>
+                {tarefa.titulo}
+            </h1>
 
+            {/* Caixa de detalhes no estilo Glassmorphism */}
             <div style={{
-                border: '1px solid #e2e8f0',
-                borderRadius: '8px',
-                padding: '20px',
-                backgroundColor: '#ffffff'
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                backdropFilter: 'blur(12px)',
+                borderRadius: '20px',
+                padding: '30px',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.2)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '14px',
+                fontSize: '1.1rem',
+                lineHeight: '1.6'
             }}>
                 <p><strong>Descrição:</strong> {tarefa.descricao || 'Sem descrição'}</p>
                 <p><strong>Status:</strong> {tarefa.status}</p>
