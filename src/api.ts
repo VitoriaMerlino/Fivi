@@ -57,3 +57,13 @@ export async function criarProjeto(projeto: Omit<Projeto, 'id'>): Promise<Projet
   const resposta = await api.post<Projeto>('/projetos', projeto);
   return resposta.data;
 }
+
+export async function atualizarProjeto(id: string | number, projeto: Partial<Projeto>): Promise<Projeto> {
+  const resposta = await api.put<Projeto>(`/projetos/${id}`, projeto);
+  return resposta.data;
+}
+
+export async function getProjetoPorId(id: string | number): Promise<Projeto> {
+  const resposta = await api.get<Projeto>(`/projetos/${id}`);
+  return resposta.data;
+}

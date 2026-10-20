@@ -7,6 +7,8 @@ import { ListaTarefas } from './pages/ListaTarefas';
 import { DetalheTarefa } from './pages/DetalheTarefas';
 import { NovaTarefa } from './pages/NovaTarefa';
 import { EditarTarefa } from './pages/EditarTarefa';
+import { CriarProjeto } from './pages/CriarProjeto';
+import { EditarProjeto } from './pages/EditarProjeto';
 
 export function App() {
   return (
@@ -25,6 +27,8 @@ export function App() {
           {/* Rotas de Projetos */}
           <Route path="projetos" element={<ListaProjetos />} />
           <Route path="projetos/:id" element={<PaginaProjeto />} />
+          <Route path="/projetos/novo" element={<CriarProjeto />} />
+          <Route path="/projetos/:id/editar" element={<EditarProjeto />} />
 
           {/* Rota 404 */}
           <Route path="*" element={<h2>404 - Página Não Encontrada</h2>} />
