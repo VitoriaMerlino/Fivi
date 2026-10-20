@@ -6,6 +6,7 @@ import { PaginaProjeto } from './pages/PaginaProjeto';
 import { ListaTarefas } from './pages/ListaTarefas';
 import { DetalheTarefa } from './pages/DetalheTarefas';
 import { NovaTarefa } from './pages/NovaTarefa';
+import { EditarTarefa } from './pages/EditarTarefa';
 
 export function App() {
   return (
@@ -19,6 +20,7 @@ export function App() {
           <Route path="tarefas" element={<ListaTarefas />} />
           <Route path="tarefas/nova" element={<NovaTarefa />} />
           <Route path="tarefas/:id" element={<DetalheTarefa />} />
+          <Route path="/tarefas/:id/editar" element={<EditarTarefa />} />
 
           {/* Rotas de Projetos */}
           <Route path="projetos" element={<ListaProjetos />} />

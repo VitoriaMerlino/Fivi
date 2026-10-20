@@ -33,26 +33,48 @@ export function DetalheTarefa() {
 
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto', color: '#ffffff' }}>
-            {/* Botão de voltar estilo pill translúcido */}
-            <Link 
-                to="/tarefas" 
-                style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '10px 22px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                    backdropFilter: 'blur(10px)',
-                    color: '#ffffff',
-                    fontWeight: 'bold',
-                    borderRadius: '30px',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                    textDecoration: 'none',
-                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)'
-                }}
-            >
-                ← Voltar para a lista
-            </Link>
+            {/* Barra superior de ações */}
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                {/* Botão de voltar estilo pill translúcido */}
+                <Link 
+                    to="/tarefas" 
+                    style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '10px 22px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        backdropFilter: 'blur(10px)',
+                        color: '#ffffff',
+                        fontWeight: 'bold',
+                        borderRadius: '30px',
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        textDecoration: 'none',
+                        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)'
+                    }}
+                >
+                    ← Voltar para a lista
+                </Link>
+
+                {/* Botão para navegar até a página de edição */}
+                <Link 
+                    to={`/tarefas/${tarefa.id}/editar`}
+                    style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '10px 22px',
+                        backgroundColor: '#ffffff',
+                        color: '#c026d3',
+                        fontWeight: 'bold',
+                        borderRadius: '30px',
+                        textDecoration: 'none',
+                        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)'
+                    }}
+                >
+                    ✎ Editar Tarefa
+                </Link>
+            </div>
 
             {/* Título da Tarefa */}
             <h1 style={{ marginTop: '24px', marginBottom: '20px', fontSize: '2.2rem', color: '#ffffff' }}>
