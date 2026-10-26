@@ -9,12 +9,14 @@ import { NovaTarefa } from './pages/NovaTarefa';
 import { EditarTarefa } from './pages/EditarTarefa';
 import { CriarProjeto } from './pages/CriarProjeto';
 import { EditarProjeto } from './pages/EditarProjeto';
+import { FiltrosProvider } from './contexts/FiltrosContext';
 
 export function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
+      <FiltrosProvider>
+        <Routes>
+          <Route path="/" element={<Layout />}>
           {/* Rota inicial */}
           <Route index element={<Navigate to="/tarefas" replace />} />
 
@@ -34,6 +36,7 @@ export function App() {
           <Route path="*" element={<h2>404 - Página Não Encontrada</h2>} />
         </Route>
       </Routes>
+      </FiltrosProvider>
     </BrowserRouter>
   );
 }

@@ -1,14 +1,14 @@
+import { useFiltros } from "../contexts/FiltrosContext";
 import { useEffect, useState } from "react";
 import type { Tarefa, Status, Prioridade } from "../tipos";
 import { getTarefas } from "../api";
 import { TarefaCard } from "../components/TarefaCard";
 
+
 export function ListaTarefas() {
+  const { busca, setBusca, status, setStatus, prioridade, setPrioridade } = useFiltros();
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [carregando, setCarregando] = useState(true);
-  const [busca, setBusca] = useState("");
-  const [status, setStatus] = useState<Status | "todos">("todos");
-  const [prioridade, setPrioridade] = useState<Prioridade | "todas">("todas");
 
   useEffect(() => {
     getTarefas()
