@@ -10,6 +10,7 @@ import { EditarTarefa } from './pages/EditarTarefa';
 import { CriarProjeto } from './pages/CriarProjeto';
 import { EditarProjeto } from './pages/EditarProjeto';
 import { FiltrosProvider } from './contexts/FiltrosContext';
+import { QuadroTarefas } from "./pages/QuadroTarefas";
 
 export function App() {
   return (
@@ -31,6 +32,9 @@ export function App() {
           <Route path="projetos/:id" element={<PaginaProjeto />} />
           <Route path="/projetos/novo" element={<CriarProjeto />} />
           <Route path="/projetos/:id/editar" element={<EditarProjeto />} />
+
+          {/* Rota do Quadro de Tarefas */}
+          <Route path="/quadro" element={<QuadroTarefas />} />
 
           {/* Rota 404 */}
           <Route path="*" element={<h2>404 - Página Não Encontrada</h2>} />
