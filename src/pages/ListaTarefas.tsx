@@ -1,12 +1,14 @@
+import { Link } from "react-router-dom";
 import { useFiltros } from "../contexts/FiltrosContext";
 import { useEffect, useState } from "react";
-import type { Tarefa, Status, Prioridade } from "../tipos";
+import type { Tarefa } from "../tipos";
 import { getTarefas } from "../api";
 import { TarefaCard } from "../components/TarefaCard";
-
+import { BarraFiltros } from "../components/BarraFiltros";
+import { AlternadorVisao } from "../components/AlternadorVisao";
 
 export function ListaTarefas() {
-  const { busca, setBusca, status, setStatus, prioridade, setPrioridade } = useFiltros();
+  const { busca, status, prioridade } = useFiltros();
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [carregando, setCarregando] = useState(true);
 
@@ -22,7 +24,14 @@ export function ListaTarefas() {
         setCarregando(false);
       });
   }, []);
-    const termo = busca.trim().toLowerCase();
+
+  function handleTarefaAtualizada(atualizada: Tarefa) {
+    setTarefas((atuais) =>
+      atuais.map((t) => (t.id === atualizada.id ? atualizada : t))
+    );
+  }
+
+  const termo = busca.trim().toLowerCase();
 
   const tarefasVisiveis = tarefas.filter((tarefa) => {
     const bateBusca = tarefa.titulo.toLowerCase().includes(termo);
@@ -39,64 +48,37 @@ export function ListaTarefas() {
 
   return (
     <div>
-      <h1 style={{ color: "#ffffff", marginBottom: "24px", fontSize: "2rem" }}>
-        Lista de Tarefas
-      </h1>
       <div
-        role="search"
-        aria-label="Buscar e filtrar tarefas"
         style={{
           display: "flex",
-          flexWrap: "wrap",
-          gap: "16px",
+          justifyContent: "space-between",
+          alignItems: "center",
           marginBottom: "24px",
-          color: "#ffffff",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-          <label htmlFor="busca-titulo">Buscar por título</label>
-          <input
-            id="busca-titulo"
-            type="search"
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
-          />
-        </div>
+        <h1 style={{ color: "#ffffff", margin: 0, fontSize: "2rem" }}>
+          Lista de Tarefas
+        </h1>
+        <Link
+          to="/tarefas/nova"
+          style={{
+            padding: "10px 22px",
+            backgroundColor: "#ffffff",
+            color: "#c026d3",
+            fontWeight: "bold",
+            borderRadius: "30px",
+            textDecoration: "none",
+            boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
+          }}
+        >
+          + Nova Tarefa
+        </Link>
+      </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-          <label htmlFor="filtro-status">Status</label>
-          <select
-            id="filtro-status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value as Status | "todos")}
-          >
-            <option value="todos">Todos</option>
-            <option value="a-fazer">A fazer</option>
-            <option value="em-andamento">Em andamento</option>
-            <option value="em-revisao">Em revisão</option>
-            <option value="concluida">Concluída</option>
-          </select>
-        </div>
+      <AlternadorVisao />
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-          <label htmlFor="filtro-prioridade">Prioridade</label>
-          <select
-            id="filtro-prioridade"
-            value={prioridade}
-            onChange={(e) =>
-              setPrioridade(e.target.value as Prioridade | "todas")
-            }
-          >
-            <option value="todas">Todas</option>
-            <option value="baixa">Baixa</option>
-            <option value="media">Média</option>
-            <option value="alta">Alta</option>
-          </select>
-        </div>
-    </div>
+      <BarraFiltros />
 
-
-      {/* Lista de tarefas filtradas */}
       <div
         style={{
           display: "flex",
@@ -106,13 +88,16 @@ export function ListaTarefas() {
       >
         {tarefasVisiveis.length > 0 ? (
           tarefasVisiveis.map((tarefa) => (
-            <TarefaCard key={tarefa.id} tarefa={tarefa} />
+            <TarefaCard
+              key={tarefa.id}
+              tarefa={tarefa}
+              aoAtualizar={handleTarefaAtualizada}
+            />
           ))
         ) : (
           <p>Nenhuma tarefa encontrada.</p>
         )}
       </div>
-
     </div>
   );
 }

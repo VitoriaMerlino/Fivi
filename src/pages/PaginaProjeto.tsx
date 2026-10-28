@@ -82,9 +82,33 @@ export function PaginaProjeto() {
         )}
       </div>
 
-      <h3 style={{ fontSize: '1.5rem', marginBottom: '18px', color: '#ffffff', fontWeight: 'bold' }}>
-        Tarefas
-      </h3>
+      {/* Título das tarefas + botão de nova tarefa neste projeto */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '18px',
+        }}
+      >
+        <h3 style={{ fontSize: '1.5rem', margin: 0, color: '#ffffff', fontWeight: 'bold' }}>
+          Tarefas
+        </h3>
+        <Link
+          to={`/tarefas/nova?projetoId=${projeto.id}`}
+          style={{
+            padding: '10px 22px',
+            backgroundColor: '#ffffff',
+            color: '#c026d3',
+            fontWeight: 'bold',
+            borderRadius: '30px',
+            textDecoration: 'none',
+            boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
+          }}
+        >
+          + Nova tarefa neste projeto
+        </Link>
+      </div>
 
       <div style={{
         display: 'flex',

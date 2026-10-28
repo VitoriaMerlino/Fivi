@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import type { Tarefa, Status } from "../tipos";
 import { getTarefas } from "../api";
 import { TarefaCard } from "../components/TarefaCard";
+import { BarraFiltros } from "../components/BarraFiltros";
+import { AlternadorVisao } from "../components/AlternadorVisao";
 import { useFiltros } from "../contexts/FiltrosContext";
 
 const COLUNAS: { id: Status; titulo: string }[] = [
@@ -15,7 +17,7 @@ export function QuadroTarefas() {
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [carregando, setCarregando] = useState(true);
 
-  // Usa o mesmo contexto de filtros para manter a sincronização!
+  // Usa o mesmo contexto de filtros da lista
   const { busca, status, prioridade } = useFiltros();
 
   useEffect(() => {
@@ -25,9 +27,14 @@ export function QuadroTarefas() {
       .finally(() => setCarregando(false));
   }, []);
 
+  function handleTarefaAtualizada(atualizada: Tarefa) {
+    setTarefas((atuais) =>
+      atuais.map((t) => (t.id === atualizada.id ? atualizada : t))
+    );
+  }
+
   const termo = busca.trim().toLowerCase();
 
-  // Aplica a busca e os filtros
   const tarefasFiltradas = tarefas.filter((tarefa) => {
     const bateBusca = tarefa.titulo.toLowerCase().includes(termo);
     const bateStatus = status === "todos" || tarefa.status === status;
@@ -47,6 +54,10 @@ export function QuadroTarefas() {
         Quadro de Tarefas
       </h1>
 
+      <AlternadorVisao />
+
+      <BarraFiltros />
+
       <div
         style={{
           display: "grid",
@@ -56,7 +67,6 @@ export function QuadroTarefas() {
         }}
       >
         {COLUNAS.map((coluna) => {
-          // Agrupa os cartões filtrados pela coluna correspondente
           const tarefasDaColuna = tarefasFiltradas.filter(
             (t) => t.status === coluna.id
           );
@@ -92,7 +102,11 @@ export function QuadroTarefas() {
               >
                 {tarefasDaColuna.length > 0 ? (
                   tarefasDaColuna.map((tarefa) => (
-                    <TarefaCard key={tarefa.id} tarefa={tarefa} />
+                    <TarefaCard
+                      key={tarefa.id}
+                      tarefa={tarefa}
+                      aoAtualizar={handleTarefaAtualizada}
+                    />
                   ))
                 ) : (
                   <p style={{ color: "#a6adc8", fontSize: "0.9rem" }}>

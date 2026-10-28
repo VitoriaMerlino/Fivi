@@ -1,11 +1,9 @@
 {
   "projetos": [
     {
-      "id": "1",
       "nome": "Gerenciador de Tarefas",
       "descricao": "Projeto em equipe da disciplina",
-      "disciplina": "Desenvolvimento Frontend",
-      "criadoEm": "2026-10-01"
+      "id": "1"
     },
     {
       "id": "2",
@@ -13,15 +11,27 @@
       "descricao": "Trabalho de modelagem de dados",
       "disciplina": "Banco de Dados",
       "criadoEm": "2026-10-02"
+    },
+    {
+      "nome": "Novo projeto",
+      "descricao": "Exemplo\n",
+      "id": "bBhuyl7Ll2Q"
+    },
+    {
+      "nome": "Projeto novo",
+      "descricao": "",
+      "disciplina": "Frontend",
+      "criadoEm": "2026-10-22",
+      "id": "lLUYOLpt8F4"
     }
   ],
   "tarefas": [
     {
       "titulo": "Criar o repositório",
-      "descricao": "Repositório da equipe no GitHub, com todos os integrantes",
-      "status": "concluida",
-      "prioridade": "alta",
-      "responsavel": "Filipe",
+      "descricao": "",
+      "status": "pendente",
+      "prioridade": "média",
+      "responsavel": "Merlino",
       "prazo": "2026-10-06",
       "id": "1"
     },

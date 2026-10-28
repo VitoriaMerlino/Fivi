@@ -4,7 +4,8 @@ export function Layout() {
   const location = useLocation();
 
   // Verifica qual rota está ativa (funciona mesmo em sub-rotas como /tarefas/1)
-  const isTarefasActive = location.pathname.startsWith('/tarefas');
+const isTarefasActive =
+  location.pathname.startsWith('/tarefas') || location.pathname.startsWith('/quadro');
   const isProjetosActive = location.pathname.startsWith('/projetos');
 
   return (
