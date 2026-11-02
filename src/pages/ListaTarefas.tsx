@@ -11,19 +11,25 @@ export function ListaTarefas() {
   const { busca, status, prioridade } = useFiltros();
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState<string | null>(null);
 
   useEffect(() => {
-    getTarefas()
-      .then((dados) => {
-        setTarefas(dados);
-      })
-      .catch((erro) => {
-        console.error("Erro ao buscar tarefas:", erro);
-      })
-      .finally(() => {
-        setCarregando(false);
-      });
-  }, []);
+    setCarregando(true);
+    setErro(null);
+
+  getTarefas()
+    .then((dados) => {
+      setTarefas(dados);
+    })
+    .catch((err) => {
+      console.error("Erro ao buscar tarefas:", err);
+      setErro("Não foi possível carregar as tarefas. Tente novamente mais tarde.");
+    })
+    .finally(() => {
+      setCarregando(false);
+    });
+}, []);
+
 
   function handleTarefaAtualizada(atualizada: Tarefa) {
     setTarefas((atuais) =>
@@ -46,6 +52,14 @@ export function ListaTarefas() {
     return <p style={{ color: "#ffffff" }}>Carregando tarefas...</p>;
   }
 
+  if (erro) {
+  return (
+    <div style={{ color: "#f38ba8", padding: "20px" }}>
+        <p>{erro}</p>
+      </div>
+    );
+  }
+  
   return (
     <div>
       <div
@@ -95,8 +109,10 @@ export function ListaTarefas() {
             />
           ))
         ) : (
-          <p>Nenhuma tarefa encontrada.</p>
-        )}
+          <p style={{ color: "#a6adc8", padding: "20px" }}>
+            Nenhuma tarefa encontrada.
+          </p>
+      )}
       </div>
     </div>
   );
