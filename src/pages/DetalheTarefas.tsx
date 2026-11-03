@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import type { Tarefa } from '../tipos';
-import { getTarefaPorId } from "../api";
+import { getTarefaPorId, deletarTarefa } from "../api";
+import { BotaoExcluir } from "../components/BotaoExcluir";
 
 export function DetalheTarefa() {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const [tarefa, setTarefa] = useState<Tarefa | null>(null);
     const [carregando, setCarregando] = useState(true);
 
@@ -101,6 +103,17 @@ export function DetalheTarefa() {
                 <p><strong>Responsável:</strong> {tarefa.responsavel}</p>
                 <p><strong>Prazo:</strong> {tarefa.prazo}</p>
                 <p><strong>ID do Projeto:</strong> {tarefa.projetoId}</p>
+            </div>
+
+            {/* Exclusão com confirmação */}
+            <div style={{ marginTop: '20px' }}>
+                <BotaoExcluir
+                    titulo={tarefa.titulo}
+                    aoConfirmar={async () => {
+                        await deletarTarefa(tarefa.id);
+                        navigate('/tarefas');
+                    }}
+                />
             </div>
         </div>
     );

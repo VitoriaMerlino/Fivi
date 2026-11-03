@@ -36,7 +36,11 @@ export function ListaTarefas() {
       atuais.map((t) => (t.id === atualizada.id ? atualizada : t))
     );
   }
-
+  
+  function handleTarefaExcluida(idExcluido: Tarefa['id']) {
+    setTarefas((atuais) => atuais.filter((t) => t.id !== idExcluido));
+  }
+  
   const termo = busca.trim().toLowerCase();
 
   const tarefasVisiveis = tarefas.filter((tarefa) => {

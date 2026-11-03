@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { getProjetoComTarefas } from '../api';
 import type { ProjetoComTarefas } from '../api';
 import { TarefaCard } from '../components/TarefaCard';
+import type { Tarefa } from '../tipos';
+
 
 export function PaginaProjeto() {
   const { id } = useParams();
@@ -13,6 +15,14 @@ export function PaginaProjeto() {
     getProjetoComTarefas(id).then(setProjeto);
   }, [id]);
 
+  function handleTarefaExcluida(idExcluido: Tarefa['id']) {
+    setProjeto((atual) =>
+      atual
+        ? { ...atual, tarefas: atual.tarefas.filter((t) => t.id !== idExcluido) }
+        : atual
+    );
+  }
+  
   if (!projeto) {
     return <p style={{ color: '#ffffff', fontSize: '1.2rem' }}>Carregando...</p>;
   }
@@ -116,7 +126,11 @@ export function PaginaProjeto() {
         gap: '20px'
       }}>
         {projeto.tarefas.map((tarefa) => (
-          <TarefaCard key={tarefa.id} tarefa={tarefa} />
+          <TarefaCard
+            key={tarefa.id}
+            tarefa={tarefa}
+            aoExcluir={handleTarefaExcluida}
+          />
         ))}
       </div>
     </section>
