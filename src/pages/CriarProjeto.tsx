@@ -8,21 +8,29 @@ export function CriarProjeto() {
   const [descricao, setDescricao] = useState('');
   const [disciplina, setDisciplina] = useState('');
   const [salvando, setSalvando] = useState(false);
+  const [erroEnvio, setErroEnvio] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (salvando) return;
+
+    setErroEnvio('');
+
     try {
       setSalvando(true);
       await criarProjeto({
         nome,
         descricao,
         disciplina,
-        criadoEm: new Date().toISOString().split('T')[0], // Gera a data atual no formato AAAA-MM-DD
+        criadoEm: new Date().toISOString().split('T')[0], // Data atual no formato AAAA-MM-DD
       });
       navigate('/projetos');
     } catch (erro) {
       console.error('Erro ao criar projeto:', erro);
-      alert('Ocorreu um erro ao criar o projeto.');
+      // Os campos continuam preenchidos: nada é apagado quando falha
+      setErroEnvio(
+        'Não foi possível criar o projeto. Verifique sua conexão e tente novamente.'
+      );
     } finally {
       setSalvando(false);
     }
@@ -68,10 +76,11 @@ export function CriarProjeto() {
         }}
       >
         <div>
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
+          <label htmlFor="nome-projeto" style={labelStyle}>
             Nome do Projeto
           </label>
           <input
+            id="nome-projeto"
             type="text"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
@@ -81,10 +90,11 @@ export function CriarProjeto() {
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
+          <label htmlFor="disciplina-projeto" style={labelStyle}>
             Disciplina
           </label>
           <input
+            id="disciplina-projeto"
             type="text"
             value={disciplina}
             onChange={(e) => setDisciplina(e.target.value)}
@@ -94,16 +104,23 @@ export function CriarProjeto() {
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
+          <label htmlFor="descricao-projeto" style={labelStyle}>
             Descrição
           </label>
           <textarea
+            id="descricao-projeto"
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
             rows={4}
             style={{ ...inputStyle, resize: 'vertical' }}
           />
         </div>
+
+        {erroEnvio && (
+          <p role="alert" aria-live="assertive" style={erroStyle}>
+            ⚠ {erroEnvio}
+          </p>
+        )}
 
         <button
           type="submit"
@@ -117,16 +134,23 @@ export function CriarProjeto() {
             fontSize: '1rem',
             border: 'none',
             borderRadius: '30px',
-            cursor: 'pointer',
+            cursor: salvando ? 'wait' : 'pointer',
+            opacity: salvando ? 0.6 : 1,
             boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
           }}
         >
-          {salvando ? 'A guardar...' : 'Criar Projeto'}
+          {salvando ? 'Salvando...' : 'Criar Projeto'}
         </button>
       </form>
     </div>
   );
 }
+
+const labelStyle: React.CSSProperties = {
+  display: 'block',
+  marginBottom: '6px',
+  fontWeight: 'bold',
+};
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -138,4 +162,15 @@ const inputStyle: React.CSSProperties = {
   fontSize: '1rem',
   outline: 'none',
   boxSizing: 'border-box',
+};
+
+// Caixa clara com ícone e texto: o erro não depende só de cor
+const erroStyle: React.CSSProperties = {
+  margin: 0,
+  padding: '8px 12px',
+  borderRadius: '10px',
+  backgroundColor: '#fef2f2',
+  color: '#991b1b',
+  fontWeight: 'bold',
+  fontSize: '0.9rem',
 };

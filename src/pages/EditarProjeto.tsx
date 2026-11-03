@@ -13,6 +13,7 @@ export function EditarProjeto() {
   const [descricao, setDescricao] = useState('');
   const [carregando, setCarregando] = useState(true);
   const [salvando, setSalvando] = useState(false);
+  const [erroEnvio, setErroEnvio] = useState('');
   const [erro, setErro] = useState<'nao-encontrado' | 'falha' | null>(null);
   const [tentativa, setTentativa] = useState(0);
 
@@ -47,7 +48,9 @@ export function EditarProjeto() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!id || !projeto) return;
+    if (!id || !projeto || salvando) return;
+
+    setErroEnvio('');
 
     try {
       setSalvando(true);
@@ -56,7 +59,10 @@ export function EditarProjeto() {
       navigate(`/projetos/${id}`);
     } catch (erro) {
       console.error('Erro ao atualizar projeto:', erro);
-      alert('Ocorreu um erro ao guardar as alterações.');
+      // Os campos continuam preenchidos: nada é apagado quando falha
+      setErroEnvio(
+        'Não foi possível salvar as alterações. Verifique sua conexão e tente novamente.'
+      );
     } finally {
       setSalvando(false);
     }
@@ -131,10 +137,7 @@ export function EditarProjeto() {
         }}
       >
         <div>
-          <label
-            htmlFor="nome-projeto"
-            style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}
-          >
+          <label htmlFor="nome-projeto" style={labelStyle}>
             Nome do Projeto
           </label>
           <input
@@ -148,10 +151,7 @@ export function EditarProjeto() {
         </div>
 
         <div>
-          <label
-            htmlFor="descricao-projeto"
-            style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}
-          >
+          <label htmlFor="descricao-projeto" style={labelStyle}>
             Descrição
           </label>
           <textarea
@@ -162,6 +162,12 @@ export function EditarProjeto() {
             style={{ ...inputStyle, resize: 'vertical' }}
           />
         </div>
+
+        {erroEnvio && (
+          <p role="alert" aria-live="assertive" style={erroStyle}>
+            ⚠ {erroEnvio}
+          </p>
+        )}
 
         <button
           type="submit"
@@ -175,16 +181,23 @@ export function EditarProjeto() {
             fontSize: '1rem',
             border: 'none',
             borderRadius: '30px',
-            cursor: 'pointer',
+            cursor: salvando ? 'wait' : 'pointer',
+            opacity: salvando ? 0.6 : 1,
             boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
           }}
         >
-          {salvando ? 'A guardar...' : 'Salvar Alterações'}
+          {salvando ? 'Salvando...' : 'Salvar Alterações'}
         </button>
       </form>
     </div>
   );
 }
+
+const labelStyle: React.CSSProperties = {
+  display: 'block',
+  marginBottom: '6px',
+  fontWeight: 'bold',
+};
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -196,4 +209,14 @@ const inputStyle: React.CSSProperties = {
   fontSize: '1rem',
   outline: 'none',
   boxSizing: 'border-box',
+};
+
+const erroStyle: React.CSSProperties = {
+  margin: 0,
+  padding: '8px 12px',
+  borderRadius: '10px',
+  backgroundColor: '#fef2f2',
+  color: '#991b1b',
+  fontWeight: 'bold',
+  fontSize: '0.9rem',
 };
