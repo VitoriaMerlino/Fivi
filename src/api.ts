@@ -77,3 +77,8 @@ export async function atualizarStatusTarefa(
   const resposta = await api.patch<Tarefa>(`/tarefas/${id}`, { status });
   return resposta.data;
 }
+
+// Diz se o erro veio de um 404 (item que não existe)
+export function ehErro404(erro: unknown): boolean {
+  return axios.isAxiosError(erro) && erro.response?.status === 404;
+}
