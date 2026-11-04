@@ -16,7 +16,6 @@ export function TarefaCard({ tarefa, aoAtualizar, aoExcluir }: TarefaCardProps) 
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState(false);
 
-  // Mantém o seletor igual ao dado quando a tela pai atualiza a tarefa
   useEffect(() => {
     setStatusAtual(tarefa.status);
   }, [tarefa.status]);
@@ -42,25 +41,28 @@ export function TarefaCard({ tarefa, aoAtualizar, aoExcluir }: TarefaCardProps) 
   }
 
   return (
-    <div style={{
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-      backdropFilter: 'blur(12px)',
-      borderRadius: '20px',
-      padding: '24px',
-      border: '1px solid rgba(255, 255, 255, 0.3)',
-      boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.2)',
-      color: '#ffffff',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      gap: '12px'
-    }}>
+    <div
+      style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        backdropFilter: 'blur(12px)',
+        borderRadius: '20px',
+        padding: '24px',
+        border: '1px solid rgba(255, 255, 255, 0.3)',
+        boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.2)',
+        color: '#ffffff',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        gap: '12px',
+        wordBreak: 'break-word', /* Evita que títulos longos estorem o card em telas pequenas */
+      }}
+    >
       <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 'bold' }}>
         {tarefa.titulo}
       </h3>
 
       <div style={{ fontSize: '0.95rem', opacity: 0.9, lineHeight: '1.5' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '4px 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '4px 0', flexWrap: 'wrap' }}>
           <label htmlFor={`status-${tarefa.id}`}>
             <strong>Status:</strong>
           </label>
@@ -69,20 +71,21 @@ export function TarefaCard({ tarefa, aoAtualizar, aoExcluir }: TarefaCardProps) 
             value={statusAtual}
             onChange={handleMudarStatus}
             disabled={salvando}
+            aria-busy={salvando} /* Avisa leitor de tela que está enviando dados */
             style={{
               padding: '4px 10px',
               borderRadius: '10px',
               border: '1px solid rgba(255, 255, 255, 0.4)',
-              backgroundColor: 'rgba(255, 255, 255, 0.15)',
+              backgroundColor: 'rgba(255, 255, 255, 0.25)',
               color: '#ffffff',
               fontSize: '0.95rem',
               cursor: salvando ? 'wait' : 'pointer',
             }}
           >
-            <option value="a-fazer" style={{ color: '#000' }}>A fazer</option>
-            <option value="em-andamento" style={{ color: '#000' }}>Em andamento</option>
-            <option value="em-revisao" style={{ color: '#000' }}>Em revisão</option>
-            <option value="concluida" style={{ color: '#000' }}>Concluída</option>
+            <option value="a-fazer" style={{ color: '#000000' }}>A fazer</option>
+            <option value="em-andamento" style={{ color: '#000000' }}>Em andamento</option>
+            <option value="em-revisao" style={{ color: '#000000' }}>Em revisão</option>
+            <option value="concluida" style={{ color: '#000000' }}>Concluída</option>
           </select>
         </div>
 
@@ -110,6 +113,7 @@ export function TarefaCard({ tarefa, aoAtualizar, aoExcluir }: TarefaCardProps) 
 
       <Link
         to={`/tarefas/${tarefa.id}`}
+        aria-label={`Ver detalhes da tarefa ${tarefa.titulo}`} /* Melhora para leitores de tela */
         style={{
           display: 'inline-block',
           marginTop: '8px',

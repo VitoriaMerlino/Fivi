@@ -16,22 +16,25 @@ export function BarraFiltros() {
         color: '#ffffff',
       }}
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: '1 1 200px' }}>
         <label htmlFor="busca-titulo">Buscar por título</label>
         <input
           id="busca-titulo"
           type="search"
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
+          placeholder="Digite para buscar..."
+          style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
         />
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: '1 1 140px' }}>
         <label htmlFor="filtro-status">Status</label>
         <select
           id="filtro-status"
           value={status}
           onChange={(e) => setStatus(e.target.value as Status | 'todos')}
+          style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
         >
           <option value="todos">Todos</option>
           <option value="a-fazer">A fazer</option>
@@ -41,12 +44,13 @@ export function BarraFiltros() {
         </select>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: '1 1 140px' }}>
         <label htmlFor="filtro-prioridade">Prioridade</label>
         <select
           id="filtro-prioridade"
           value={prioridade}
           onChange={(e) => setPrioridade(e.target.value as Prioridade | 'todas')}
+          style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
         >
           <option value="todas">Todas</option>
           <option value="baixa">Baixa</option>

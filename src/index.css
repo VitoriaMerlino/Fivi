@@ -16,3 +16,8 @@ html, body, #root {
   margin: 0;
   padding: 0;
 }
+/* Foco visível para navegação por teclado (Acessibilidade) */
+*:focus-visible {
+  outline: 2px solid #c026d3;
+  outline-offset: 2px;
+}
