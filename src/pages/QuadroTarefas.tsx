@@ -33,8 +33,13 @@ export function QuadroTarefas() {
     );
   }
 
+  function handleTarefaExcluida(idExcluido: Tarefa["id"]) {
+    setTarefas((atuais) => atuais.filter((t) => t.id !== idExcluido));
+  }
+
   const termo = busca.trim().toLowerCase();
 
+  // Aplica a busca e os filtros
   const tarefasFiltradas = tarefas.filter((tarefa) => {
     const bateBusca = tarefa.titulo.toLowerCase().includes(termo);
     const bateStatus = status === "todos" || tarefa.status === status;
@@ -67,6 +72,7 @@ export function QuadroTarefas() {
         }}
       >
         {COLUNAS.map((coluna) => {
+          // Agrupa os cartões filtrados pela coluna correspondente
           const tarefasDaColuna = tarefasFiltradas.filter(
             (t) => t.status === coluna.id
           );
@@ -106,6 +112,7 @@ export function QuadroTarefas() {
                       key={tarefa.id}
                       tarefa={tarefa}
                       aoAtualizar={handleTarefaAtualizada}
+                      aoExcluir={handleTarefaExcluida}
                     />
                   ))
                 ) : (

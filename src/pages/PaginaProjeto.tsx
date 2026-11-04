@@ -1,21 +1,80 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getProjetoComTarefas } from '../api';
+import { getProjetoComTarefas, ehErro404 } from '../api';
 import type { ProjetoComTarefas } from '../api';
+import type { Tarefa } from '../tipos';
 import { TarefaCard } from '../components/TarefaCard';
+import { EstadoTela } from '../components/EstadoTela';
 
 export function PaginaProjeto() {
   const { id } = useParams();
   const [projeto, setProjeto] = useState<ProjetoComTarefas | null>(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState<'nao-encontrado' | 'falha' | null>(null);
+  const [tentativa, setTentativa] = useState(0);
 
   useEffect(() => {
     if (!id) return;
-    getProjetoComTarefas(id).then(setProjeto);
-  }, [id]);
+    let cancelado = false;
 
-  if (!projeto) {
+    setCarregando(true);
+    setErro(null);
+
+    getProjetoComTarefas(id)
+      .then((dados) => {
+        if (!cancelado) setProjeto(dados);
+      })
+      .catch((e) => {
+        if (cancelado) return;
+        console.error('Erro ao buscar projeto:', e);
+        setProjeto(null);
+        setErro(ehErro404(e) ? 'nao-encontrado' : 'falha');
+      })
+      .finally(() => {
+        if (!cancelado) setCarregando(false);
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [id, tentativa]);
+
+  function handleTarefaExcluida(idExcluido: Tarefa['id']) {
+    setProjeto((atual) =>
+      atual
+        ? { ...atual, tarefas: atual.tarefas.filter((t) => t.id !== idExcluido) }
+        : atual
+    );
+  }
+
+  if (carregando) {
     return <p style={{ color: '#ffffff', fontSize: '1.2rem' }}>Carregando...</p>;
   }
+
+  if (erro === 'nao-encontrado') {
+    return (
+      <EstadoTela
+        titulo="Projeto não encontrado"
+        mensagem={`Não existe nenhum projeto com o código ${id}.`}
+        voltarPara="/projetos"
+        textoVoltar="← Voltar para projetos"
+      />
+    );
+  }
+
+  if (erro === 'falha') {
+    return (
+      <EstadoTela
+        titulo="Não foi possível carregar o projeto"
+        mensagem="Verifique se a API está no ar e tente novamente."
+        voltarPara="/projetos"
+        textoVoltar="← Voltar para projetos"
+        aoTentarNovamente={() => setTentativa((t) => t + 1)}
+      />
+    );
+  }
+
+  if (!projeto) return null;
 
   return (
     <section style={{ maxWidth: '1000px', margin: '0 auto', color: '#ffffff' }}>
@@ -116,7 +175,11 @@ export function PaginaProjeto() {
         gap: '20px'
       }}>
         {projeto.tarefas.map((tarefa) => (
-          <TarefaCard key={tarefa.id} tarefa={tarefa} />
+          <TarefaCard
+            key={tarefa.id}
+            tarefa={tarefa}
+            aoExcluir={handleTarefaExcluida}
+          />
         ))}
       </div>
     </section>

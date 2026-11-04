@@ -17,24 +17,27 @@ export function ListaTarefas() {
     setCarregando(true);
     setErro(null);
 
-  getTarefas()
-    .then((dados) => {
-      setTarefas(dados);
-    })
-    .catch((err) => {
-      console.error("Erro ao buscar tarefas:", err);
-      setErro("Não foi possível carregar as tarefas. Tente novamente mais tarde.");
-    })
-    .finally(() => {
-      setCarregando(false);
-    });
-}, []);
-
+    getTarefas()
+      .then((dados) => {
+        setTarefas(dados);
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar tarefas:", err);
+        setErro("Não foi possível carregar as tarefas. Tente novamente mais tarde.");
+      })
+      .finally(() => {
+        setCarregando(false);
+      });
+  }, []);
 
   function handleTarefaAtualizada(atualizada: Tarefa) {
     setTarefas((atuais) =>
       atuais.map((t) => (t.id === atualizada.id ? atualizada : t))
     );
+  }
+
+  function handleTarefaExcluida(idExcluido: Tarefa["id"]) {
+    setTarefas((atuais) => atuais.filter((t) => t.id !== idExcluido));
   }
 
   const termo = busca.trim().toLowerCase();
@@ -53,13 +56,13 @@ export function ListaTarefas() {
   }
 
   if (erro) {
-  return (
-    <div style={{ color: "#f38ba8", padding: "20px" }}>
+    return (
+      <div style={{ color: "#f38ba8", padding: "20px" }}>
         <p>{erro}</p>
       </div>
     );
   }
-  
+
   return (
     <div>
       <div
@@ -106,13 +109,14 @@ export function ListaTarefas() {
               key={tarefa.id}
               tarefa={tarefa}
               aoAtualizar={handleTarefaAtualizada}
+              aoExcluir={handleTarefaExcluida}
             />
           ))
         ) : (
           <p style={{ color: "#a6adc8", padding: "20px" }}>
             Nenhuma tarefa encontrada.
           </p>
-      )}
+        )}
       </div>
     </div>
   );

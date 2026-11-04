@@ -1,39 +1,68 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getProjetoPorId, atualizarProjeto } from '../api';
+import { getProjetoPorId, atualizarProjeto, ehErro404 } from '../api';
+import type { Projeto } from '../tipos';
+import { EstadoTela } from '../components/EstadoTela';
 
 export function EditarProjeto() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  const [projeto, setProjeto] = useState<Projeto | null>(null);
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
   const [carregando, setCarregando] = useState(true);
   const [salvando, setSalvando] = useState(false);
+  const [erroEnvio, setErroEnvio] = useState('');
+  const [erro, setErro] = useState<'nao-encontrado' | 'falha' | null>(null);
+  const [tentativa, setTentativa] = useState(0);
 
   useEffect(() => {
-    if (id) {
-      getProjetoPorId(id)
-        .then((projeto) => {
-          setNome(projeto.nome || '');
-          setDescricao(projeto.descricao || '');
-        })
-        .catch((erro) => console.error('Erro ao carregar projeto:', erro))
-        .finally(() => setCarregando(false));
-    }
-  }, [id]);
+    if (!id) return;
+    let cancelado = false;
+
+    setCarregando(true);
+    setErro(null);
+
+    getProjetoPorId(id)
+      .then((dados) => {
+        if (cancelado) return;
+        setProjeto(dados);
+        setNome(dados.nome || '');
+        setDescricao(dados.descricao || '');
+      })
+      .catch((e) => {
+        if (cancelado) return;
+        console.error('Erro ao carregar projeto:', e);
+        setProjeto(null);
+        setErro(ehErro404(e) ? 'nao-encontrado' : 'falha');
+      })
+      .finally(() => {
+        if (!cancelado) setCarregando(false);
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [id, tentativa]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!id) return;
+    if (!id || !projeto || salvando) return;
+
+    setErroEnvio('');
 
     try {
       setSalvando(true);
-      await atualizarProjeto(id, { nome, descricao });
+      // Manda o projeto inteiro: o PUT substitui o objeto e apagaria os outros campos
+      await atualizarProjeto(id, { ...projeto, nome, descricao });
       navigate(`/projetos/${id}`);
     } catch (erro) {
       console.error('Erro ao atualizar projeto:', erro);
-      alert('Ocorreu um erro ao guardar as alterações.');
+      // Os campos continuam preenchidos: nada é apagado quando falha
+      setErroEnvio(
+        'Não foi possível salvar as alterações. Verifique sua conexão e tente novamente.'
+      );
     } finally {
       setSalvando(false);
     }
@@ -43,10 +72,35 @@ export function EditarProjeto() {
     return <p style={{ color: '#ffffff', fontSize: '1.2rem' }}>Carregando dados do projeto...</p>;
   }
 
+  if (erro === 'nao-encontrado') {
+    return (
+      <EstadoTela
+        titulo="Projeto não encontrado"
+        mensagem={`Não existe nenhum projeto com o código ${id}.`}
+        voltarPara="/projetos"
+        textoVoltar="← Voltar para projetos"
+      />
+    );
+  }
+
+  if (erro === 'falha') {
+    return (
+      <EstadoTela
+        titulo="Não foi possível carregar o projeto"
+        mensagem="Verifique se a API está no ar e tente novamente."
+        voltarPara="/projetos"
+        textoVoltar="← Voltar para projetos"
+        aoTentarNovamente={() => setTentativa((t) => t + 1)}
+      />
+    );
+  }
+
+  if (!projeto) return null;
+
   return (
     <div style={{ maxWidth: '700px', margin: '0 auto', color: '#ffffff' }}>
       <Link
-        to={id ? `/projetos/${id}` : '/projetos'}
+        to={`/projetos/${id}`}
         style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -83,10 +137,11 @@ export function EditarProjeto() {
         }}
       >
         <div>
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
+          <label htmlFor="nome-projeto" style={labelStyle}>
             Nome do Projeto
           </label>
           <input
+            id="nome-projeto"
             type="text"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
@@ -96,16 +151,23 @@ export function EditarProjeto() {
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
+          <label htmlFor="descricao-projeto" style={labelStyle}>
             Descrição
           </label>
           <textarea
+            id="descricao-projeto"
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
             rows={4}
             style={{ ...inputStyle, resize: 'vertical' }}
           />
         </div>
+
+        {erroEnvio && (
+          <p role="alert" aria-live="assertive" style={erroStyle}>
+            ⚠ {erroEnvio}
+          </p>
+        )}
 
         <button
           type="submit"
@@ -119,16 +181,23 @@ export function EditarProjeto() {
             fontSize: '1rem',
             border: 'none',
             borderRadius: '30px',
-            cursor: 'pointer',
+            cursor: salvando ? 'wait' : 'pointer',
+            opacity: salvando ? 0.6 : 1,
             boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
           }}
         >
-          {salvando ? 'A guardar...' : 'Salvar Alterações'}
+          {salvando ? 'Salvando...' : 'Salvar Alterações'}
         </button>
       </form>
     </div>
   );
 }
+
+const labelStyle: React.CSSProperties = {
+  display: 'block',
+  marginBottom: '6px',
+  fontWeight: 'bold',
+};
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -140,4 +209,14 @@ const inputStyle: React.CSSProperties = {
   fontSize: '1rem',
   outline: 'none',
   boxSizing: 'border-box',
+};
+
+const erroStyle: React.CSSProperties = {
+  margin: 0,
+  padding: '8px 12px',
+  borderRadius: '10px',
+  backgroundColor: '#fef2f2',
+  color: '#991b1b',
+  fontWeight: 'bold',
+  fontSize: '0.9rem',
 };

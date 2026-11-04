@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import type { Tarefa, Status } from '../tipos';
-import { atualizarStatusTarefa } from '../api';
+import { atualizarStatusTarefa, deletarTarefa } from '../api';
+import { BotaoExcluir } from './BotaoExcluir';
 
 interface TarefaCardProps {
   tarefa: Tarefa;
   aoAtualizar?: (tarefaAtualizada: Tarefa) => void;
+  aoExcluir?: (id: Tarefa['id']) => void;
 }
 
-export function TarefaCard({ tarefa, aoAtualizar }: TarefaCardProps) {
+export function TarefaCard({ tarefa, aoAtualizar, aoExcluir }: TarefaCardProps) {
   const [statusAtual, setStatusAtual] = useState<Status>(tarefa.status);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState(false);
@@ -123,6 +125,16 @@ export function TarefaCard({ tarefa, aoAtualizar }: TarefaCardProps) {
       >
         Ver detalhes →
       </Link>
+
+      {aoExcluir && (
+        <BotaoExcluir
+          titulo={tarefa.titulo}
+          aoConfirmar={async () => {
+            await deletarTarefa(tarefa.id);
+            aoExcluir(tarefa.id);
+          }}
+        />
+      )}
     </div>
   );
 }
