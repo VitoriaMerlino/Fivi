@@ -76,3 +76,17 @@ export default defineConfig([
 ])
 
 ```
+
+## API hospedada
+
+A API do projeto (json-server) está publicada no Render, no plano gratuito:
+
+https://fivi-api.onrender.com
+
+Rotas: /tarefas e /projetos (por exemplo, /projetos/1?_embed=tarefas).
+
+Pontos de atenção:
+- Depois de um tempo sem uso, o serviço dorme. O primeiro acesso pode levar cerca de um minuto.
+- Os dados voltam ao db.seed.json sempre que o serviço reinicia. Tarefas e projetos criados pelo site não ficam guardados.
+- Comando de inicialização configurado no Render:
+  cp db.seed.json db.json && npx json-server db.json --host 0.0.0.0 --port $PORT
