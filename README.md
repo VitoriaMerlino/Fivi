@@ -76,6 +76,11 @@ export default defineConfig([
 ])
 
 ```
+## Aplicação publicada
+
+Site no ar (Vercel): https://fivi-theta.vercel.app
+
+O site consome a API hospedada no Render (veja a seção "API hospedada"). No plano gratuito do Render, o primeiro acesso depois de um tempo parado pode levar cerca de um minuto.
 
 ## API hospedada
 
